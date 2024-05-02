@@ -10,15 +10,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class ConnectedThread extends Thread {
-    private final BluetoothSocket mmSocket;
     private final InputStream mmInStream;
     private final OutputStream mmOutStream;
     private final Handler handler = new Handler(Looper.getMainLooper());
     public Runnable runnable;
-    private byte[] mmBuffer; // mmBuffer store for the stream
 
     public ConnectedThread() {
-        mmSocket = RobotConnect.mmSocket;
+        BluetoothSocket mmSocket = RobotConnect.mmSocket;
         InputStream tmpIn = null;
         OutputStream tmpOut = null;
 
@@ -40,7 +38,8 @@ public class ConnectedThread extends Thread {
     }
 
     public void run() {
-        mmBuffer = new byte[1024];
+        // mmBuffer store for the stream
+        byte[] mmBuffer = new byte[1024];
         int numBytes; // bytes returned from read()
 
         // Keep listening to the InputStream until an exception occurs.
@@ -63,15 +62,6 @@ public class ConnectedThread extends Thread {
             Log.d("Out", text);
         } catch (IOException e) {
             Log.e("Connect", "Error occurred when sending data", e);
-        }
-    }
-
-    // Call this method from the main activity to shut down the connection.
-    public void cancel() {
-        try {
-            mmSocket.close();
-        } catch (IOException e) {
-            Log.e("Connect", "Could not close the connect socket", e);
         }
     }
 }
