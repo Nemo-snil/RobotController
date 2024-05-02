@@ -44,8 +44,6 @@ public class RobotConnect extends AppCompatActivity {
         devices_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                bluetoothAdapter.cancelDiscovery();
-
                 ConnectThread connectThread = new ConnectThread(devices_list.get(position), view.getContext());
                 connectThread.start();
                 devices_view.setEnabled(false);
