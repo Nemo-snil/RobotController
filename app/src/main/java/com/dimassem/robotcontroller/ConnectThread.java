@@ -72,6 +72,7 @@ public class ConnectThread extends Thread {
             return;
         }
 
+        RobotConnect.bluetoothAdapter.cancelDiscovery();
         myContext.startActivity(new Intent(myContext, Controller.class));
     }
 
