@@ -106,6 +106,7 @@ public class RobotConnect extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if (device.getName() == null || devices_list.contains(device)) {return;}
                 map = new HashMap<>();
 
                 map.put("Name", device.getName());
@@ -118,6 +119,8 @@ public class RobotConnect extends AppCompatActivity {
                         new String[]{"Name", "Address"},
                         new int[]{android.R.id.text1, android.R.id.text2});
                 devices_view.setAdapter(adapter);
+
+                Log.d("Finding device", String.format("Name: %s", map.get("Name")));
             }
         }
     };
@@ -126,13 +129,21 @@ public class RobotConnect extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         bluetoothAdapter.cancelDiscovery();
-        unregisterReceiver(reciver);
+        try {
+            unregisterReceiver(reciver);
+        } catch (RuntimeException e) {
+            Log.d("Error", e.getMessage());
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         bluetoothAdapter.cancelDiscovery();
-        unregisterReceiver(reciver);
+        try {
+            unregisterReceiver(reciver);
+        } catch (RuntimeException e) {
+            Log.d("Error", e.getMessage());
+        }
     }
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public class ConnectThread extends Thread {
     private final Context myContext;
@@ -28,6 +29,12 @@ public class ConnectThread extends Thread {
             tmp = device.createRfcommSocketToServiceRecord(device.getUuids()[0].getUuid());
         } catch (IOException e) {
             Log.e("Connect", "Socket's create() method failed", e);
+        } catch (NullPointerException e) {
+            try {
+                tmp = (BluetoothSocket) device.getClass().getMethod("createRfcommSocket", new Class[]{Integer.TYPE}).invoke(device, new Object[]{1});
+            } catch (IllegalAccessException | IllegalArgumentException |
+                     NoSuchMethodException | SecurityException | InvocationTargetException er) {
+            }
         }
         RobotConnect.mmSocket = tmp;
     }
